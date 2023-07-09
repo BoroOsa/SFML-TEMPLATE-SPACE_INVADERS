@@ -1,11 +1,11 @@
 cmake_minimum_required (VERSION 3.10)
   
-project (SAPER)
+project (SPACE_INVADERS)
 
 #####################################################################
 # Tu wymień wszystkie pliki .cpp, z których składa się projekt (rozdzielone spacją)
 
-set ( SOURCES main.cpp  )
+set ( SOURCES main.cpp SIPlayer.cpp SISFMLView.cpp SIEnemies.cpp SIBullet.cpp)
 
 #####################################################################
 

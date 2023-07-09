@@ -1,44 +1,24 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
-
-// to powinno być w osobnych plikach !
-
-class MinesweeperBoard
-{
-
-};
-
-class MSSFMLView
-{
-	MinesweeperBoard & board;
-public:
-	explicit MSSFMLView(MinesweeperBoard & b);
-
-	void draw (sf::RenderWindow & win);
-};
-
-MSSFMLView::MSSFMLView(MinesweeperBoard & b) : board(b) {}
-
-void MSSFMLView::draw (sf::RenderWindow & win)
-{
-	// tu robimy rysowanie planszy na podstawie zawartości "board"
-	
-	sf::RectangleShape r;
-	r.setSize ( sf::Vector2f(10, 10) ) ;
-	r.setFillColor ( sf::Color::Red );
-	r.setPosition(100,100);
-	win.draw(r);
-}
-
+#include <vector>
+#include "SISFMLView.h"
+#include "SIPlayer.h"
+#include <iostream>
+#include "SIEnemies.h"
+#include "SIBullet.h"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Grafika w C++/SFML");
+  srand(time(0));
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Space Invadors");
     window.setVerticalSyncEnabled(false);
-    window.setFramerateLimit(1);
+    window.setFramerateLimit(30);
 
-    MinesweeperBoard board;
-	MSSFMLView view(board);
+  SIPlayer player(10,20);
+  SIEnemies enemies(730,500,1);
+  SIBullet bullet(550,0);
+  SISFMLView view(player, enemies, bullet);
+
 
     while (window.isOpen())
     {
@@ -47,12 +27,58 @@ int main()
         {
             if (event.type == sf::Event::Closed) 
                 window.close();
+            if(event.type==sf::Event::KeyPressed)
+            {
+              if(event.key.code==sf::Keyboard::A)
+              {
+              player.ruch_w_lewo();
+              }
+              if(event.key.code==sf::Keyboard::D)
+              {
+              player.ruch_w_prawo();
+              }
+              if(event.key.code==sf::Keyboard::Space)
+              {
+              bullet.strzal_gracza();
+              }
+          }    
         }
         
-        window.clear();
-        view.draw(window);
+        window.clear(sf::Color(8,6,40));
+        view.drawOnWindow(window);
+        bullet.ruch_naboju();
+        enemies.ruch_wroga();
         window.display();
     }
 
   return 0;
 } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//testowe rysowanie przeciwniow
+        /*
+        for(int j=0, y=0;j<5;j=j+1, y=y+35)
+        {
+
+          for(int x=200; x<600;x=x+35)
+          {
+           sf::CircleShape c1 (12);
+           c1.setFillColor(sf::Color::Red);
+           c1.setPosition(x,y);
+           window.draw(c1);        
+          }
+        }
+        */
